@@ -7,6 +7,7 @@ import net.eq2online.macros.core.MacroTriggerType;
 import net.eq2online.macros.core.Macros;
 import net.eq2online.macros.scripting.api.*;
 import net.eq2online.macros.scripting.parser.ScriptContext;
+import net.eq2online.util.Game;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,6 +49,8 @@ public class BetterExec extends BaseScriptAction {
                 return new ReturnValue(false);
 
             IMacroTemplate macroTemplate = createFloatingTemplate(macroFileName, macroTaskName);
+            if(macroTemplate == null)
+                return new ReturnValue(false);
             instance.setState(macroTemplate);
             Macros.getInstance().playMacro(macroTemplate, false, ScriptContext.MAIN, execParameters);
         }
@@ -62,6 +65,11 @@ public class BetterExec extends BaseScriptAction {
             return null;
 
         File macroFilePath = new File(Macros.getInstance().getMacrosDirectory(), fileName);
+        Game.addChatMessage("path: " + macroFilePath);
+        if(macroFilePath.toString().contains("\\..\\")) {
+            return null;
+        }
+
 
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(macroFilePath))) {

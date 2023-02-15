@@ -8,6 +8,7 @@ import me.trojan.helpers.ReflectionHelper;
 import me.trojan.module.parsers.*;
 import me.trojan.socket.websocket.Config;
 import me.trojan.socket.websocket.WebSocket;
+import net.eq2online.console.Log;
 import net.eq2online.macros.core.Macros;
 import net.eq2online.macros.scripting.ActionParser;
 import net.eq2online.macros.scripting.api.*;
