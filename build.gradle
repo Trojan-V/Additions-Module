@@ -1,0 +1,87 @@
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+/* Read the versions out of the macros version string (from gradle.properties 'macros' property) */
+ext {
+    assert macros ==~ /^.+_for_.*$/ : "Macros version specifier was invalid"
+    modVersion = macros.split("_for_")[0]
+    mcVersion = macros.split("_for_")[1]
+}
+
+/* Configure minecraft environment based on properties */
+minecraft {
+    version = project.mcVersion
+    mappings = project.mappings
+    runDir = 'run'
+}
+
+/* Configure macros repository, this is where the API and dev jars will be downloaded from, do not alter this section */
+repositories {
+    maven {
+        name = 'mumfrey'
+        url = 'http://repo.mumfrey.com/content/repositories/macros'
+    }
+}
+
+// Depend on macros of the specified version (API is acquired via the dev POM)
+dependencies {
+    deobfCompile "net.eq2online:macrosdev:$modVersion"
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+}
+
+afterEvaluate {
+    runClient {
+        List<String> argList = new ArrayList<>()
+        argList.add("-Xmx2G"); argList.add("-XX:MaxMetaspaceSize=512m"); argList.add("-DFORGE_FORCE_FRAME_RECALC=true")
+        argList.add("-Dmacros.modules=" + modules.split(",").collect{mod -> "$basePackage.$mod"}.join(','))
+        jvmArgs argList
+   }
+
+    /* Get the resolved Macros API version in order to decorate the jar */
+    //def deobfResolved = configurations.deobfCompile.resolvedConfiguration.resolvedArtifacts
+    //def apiVersion = deobfResolved.findAll({it.name == "macrosapi"})[0].moduleVersion.id.version
+
+    /* Set the jar name up with the required prefix ("module_") and append information
+      $modVersion -> The version of MacroMod, for 1.12.1 this is usually 0.15.4
+      $apiVersion -> The API version MacroMod uses, for 1.12.1 this is API 26 */
+    jar {
+        baseName = "module_" + archivesBaseName
+        classifier = ""
+        //classifier = "$apiVersion-$modVersion-" + jar.classifier
+        extension = "jar"
+    }
+
+    sourceJar {
+        baseName = jar.baseName
+        classifier = jar.classifier + "-sources"
+    }
+
+    tasks.build.doLast {
+        task copyJar(type: Copy) {
+            def MultiMCDir = 'D:/Spiele/MultiMC/instances/'
+            def instanceName = 'Cobblestone Development'
+            def defaultModulesPath = '.minecraft/liteconfig/common/macros/modules'
+            copy {
+                from jar
+                into MultiMCDir + instanceName + '/' + defaultModulesPath
+            }
+            println('Copied jar from build directory into modules folder')
+       }
+    }
+}
