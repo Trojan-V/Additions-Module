@@ -130,10 +130,10 @@ public class BetterFor extends ScriptActionDo {
             try {
                 return method.invoke(state, args);
             } catch (IllegalAccessException e) {
-                Game.addChatMessage("Something went wrong in the for loop (couldn't access " + name + ") please report this to Elspeth with the attachment of your log file");
+                Game.addChatMessage("Something went wrong in the for loop (couldn't access " + name + ")");
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                Game.addChatMessage("Something went wrong in the for loop (couldn't invoke " + name + ") please report this to Elspeth with the attachment of your log file");
+                Game.addChatMessage("Something went wrong in the for loop (couldn't invoke " + name + ")");
                 e.printStackTrace();
             }
         }
@@ -147,7 +147,7 @@ public class BetterFor extends ScriptActionDo {
             f.setAccessible(true);
             return f;
         } catch (NoSuchMethodException e) {
-            Game.addChatMessage("Something went wrong in the for loop (couldn't find " + name + ") please report this to Elspeth with the attachment of your log file");
+            Game.addChatMessage("Something went wrong in the for loop (couldn't find " + name + ")");
             e.printStackTrace();
         }
         return null;

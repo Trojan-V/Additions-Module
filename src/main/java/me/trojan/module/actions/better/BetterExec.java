@@ -57,20 +57,12 @@ public class BetterExec extends BaseScriptAction {
         return new ReturnValue(true);
     }
 
-    // exec("cobble/main.txt","COBBLE")
-    // fileName -> cobble/main.txt
     private IMacroTemplate createFloatingTemplate(String fileName, String taskName) {
         int key = getNextFreeIndex(taskName);
         if (key >= 10000)
             return null;
 
         File macroFilePath = new File(Macros.getInstance().getMacrosDirectory(), fileName);
-        Game.addChatMessage("path: " + macroFilePath);
-        if(macroFilePath.toString().contains("\\..\\")) {
-            return null;
-        }
-
-
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(macroFilePath))) {
             String currentLine;
