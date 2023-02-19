@@ -95,10 +95,8 @@ public class GetMapData extends BaseScriptAction {
         return map.getMapData(heldItem, mc.world);
     }
 
-    /*
-     Returns true if the player is holding a Map in his main-hand.
-     Otherwise, returns false.
-    */
+    /* Returns true if the player is holding a Map in his main-hand.
+     Otherwise, returns false. */
     private boolean isHeldItemMap() {
         ItemStack heldItem = mc.player.getHeldItemMainhand();
         String itemID = Game.getItemName(heldItem.getItem());

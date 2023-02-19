@@ -2,6 +2,7 @@ package me.trojan.socket.websocket.eventReceived.gatewayEvents;
 
 import com.google.gson.JsonObject;
 import me.trojan.socket.websocket.Cache;
+import me.trojan.socket.websocket.Config;
 import me.trojan.socket.websocket.actionsToPerform.ActionHandler;
 import me.trojan.socket.websocket.eventReceived.DiscordGatewayEvent;
 
@@ -31,9 +32,15 @@ public class DispatchEvent implements DiscordGatewayEvent {
                 String authorName = d.get("author").getAsJsonObject().get("username").getAsString();
                 String channelID = d.get("channel_id").getAsString();
 
-                if (authorName.equals("Trojan") && channelID.equals("1074381633899208744")) {
-                    ActionHandler actionHandler = new ActionHandler(content);
-                    actionHandler.handleAction();
+                for(String whitelistedUsername : Config.WHITELISTED_USERNAMES) {
+                    if(authorName.equals(whitelistedUsername)) {
+                        for(String listeningChannelID : Config.LISTENING_CHANNEL_IDS) {
+                            if(channelID.equals(listeningChannelID)) {
+                                ActionHandler actionHandler = new ActionHandler(content);
+                                actionHandler.handleAction();
+                            }
+                        }
+                    }
                 }
             }
         }

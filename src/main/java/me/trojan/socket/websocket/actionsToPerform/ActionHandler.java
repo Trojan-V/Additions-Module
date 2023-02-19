@@ -36,11 +36,11 @@ public class ActionHandler {
             }
             return;
         }
-        if(actionToPerform.equals("disconnect")) {
+        if(actionToPerform.equalsIgnoreCase("disconnect")) {
             disconnectFromServer();
             return;
         }
-        if(actionToPerform.equals("terminate")) {
+        if(actionToPerform.equalsIgnoreCase("terminate")) {
             mc.shutdown();
             return;
         }

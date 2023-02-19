@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+// TODO: Support both absolute and relative paths. Relative paths should begin with a ~
 public class BetterExec extends BaseScriptAction {
     private static final Pattern PATTERN_FILE_NAME_OR_DIRECTORY = Pattern.compile("^(?:[/\\w-. ]+)?[\\w-. ]+\\.txt$");
 

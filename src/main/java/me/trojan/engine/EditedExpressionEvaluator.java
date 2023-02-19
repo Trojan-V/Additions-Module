@@ -62,7 +62,7 @@ public final class EditedExpressionEvaluator implements IExpressionEvaluator {
         }
     }
 
-    /* Write all variables which are currently stored in the variables Map to the liteloader.log file */
+    /* Write all variables which are currently stored in the variables map to the 'liteloader.log' file. */
     public void dumpVariables() {
         for (Map.Entry<String, Integer> variable : variables.entrySet()) {
             Object variableValue = variable.getValue();
@@ -116,7 +116,7 @@ public final class EditedExpressionEvaluator implements IExpressionEvaluator {
             stringLiteralPatternMatcher.reset(expression);
         }
 
-        expression = expression.replaceAll("(?<!&)& ", "\\&\\&")
+        expression = expression.replaceAll("(?<!&)& ", "&&")
                 .replaceAll("\\s", "")
                 .replaceAll("[Tt][Rr][Uu][Ee]", "1")
                 .replaceAll("[Ff][Aa][Ll][Ss][Ee]", "0");
@@ -126,6 +126,7 @@ public final class EditedExpressionEvaluator implements IExpressionEvaluator {
         return expression;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private int evaluate(String expression, int depth) {
         //Game.addChatMessage("Expression: " + expression + "; Depth: " + depth);
         if (expression == null || expression.length() < 1 || depth >= MAX_DEPTH)
@@ -139,7 +140,7 @@ public final class EditedExpressionEvaluator implements IExpressionEvaluator {
             Log.info("[LOG]     Evaluating [{0}]", expression);
 
         /* If the expression contains an operator, such as %, *, /, +, -, =, ==, >= etc...
-         call other evaluate method to properly calculate the subExpressionresult. */
+         call other evaluate method to properly calculate the subExpressionResult. */
         if (containsNoParentheses(expression)) {
             if (containsOperator(expression)) {
                 Matcher operatorMatcher = PATTERN_OPERATOR.matcher(expression);
@@ -210,11 +211,6 @@ public final class EditedExpressionEvaluator implements IExpressionEvaluator {
      * @return The result of the expression, here this would be 21 (because 7 * 3 = 21)
      */
     private int evaluate(String sLHS, String sRHS, String operator, int depth) {
-        //Game.addChatMessage("Called evaluate method from EditedExpressionEvaluator.");
-        //Game.addChatMessage("LHS: " + sLHS);
-        //Game.addChatMessage("RHS: " + sRHS);
-        //Game.addChatMessage("Operator: " + operator);
-        //Game.addChatMessage("Depth: " + depth);
         int lhs = getValue(sLHS, depth);
         int rhs = getValue(sRHS, depth);
         if (TRACE)
