@@ -21,7 +21,7 @@ public class HelloEvent implements DiscordGatewayEvent {
 
         WebSocket.heartbeatInstance = new Heartbeat(heartbeatInterval);
 
-        String identifyPayload = new IdentificationPayload(Config.USER_TOKEN).getPayloadString();
+        String identifyPayload = new IdentificationPayload(Config.BOT_TOKEN).getPayloadString();
         WebSocket.ws.send(identifyPayload);
     }
 }

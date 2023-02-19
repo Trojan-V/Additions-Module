@@ -31,7 +31,7 @@ public class ResumeConnectionHandler {
         try {
             WebSocket newWebsocket = new WebSocket(new URI(Cache.resumeGatewayURL));
             newWebsocket.connect();
-            newWebsocket.send(new IdentificationPayload(Config.USER_TOKEN).getPayloadString());
+            newWebsocket.send(new IdentificationPayload(Config.BOT_TOKEN).getPayloadString());
             WebSocket.ws = newWebsocket;
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -43,7 +43,7 @@ public class ResumeConnectionHandler {
         jsonObj.addProperty("op", 6);
 
         JsonObject dObj = new JsonObject();
-        dObj.addProperty("token", Config.USER_TOKEN);
+        dObj.addProperty("token", Config.BOT_TOKEN);
         dObj.addProperty("session_id", Cache.sessionID);
         dObj.addProperty("seq", Cache.lastSequence);
         jsonObj.add("d", dObj);

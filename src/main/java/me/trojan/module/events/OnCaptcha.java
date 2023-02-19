@@ -38,6 +38,8 @@ public class OnCaptcha extends BaseEventProvider implements IMacroEventDispatche
     private String folderDirectory;
     private boolean captchaStored;
 
+    private static boolean captchaEventFired = false;
+
     static {
         List<String> helpList = new ArrayList<>();
         helpList.add(Util.convertAmpCodes("&7onCaptcha-Event"));
@@ -51,16 +53,34 @@ public class OnCaptcha extends BaseEventProvider implements IMacroEventDispatche
     }
 
     @Override
-    public void initInstance(String[] instanceVariables) {
-        vars.put("MAPDATA", instanceVariables[0]);
-    }
-
-    @Override
     public void registerEvents(IMacroEventManager manager) {
         OnCaptcha.manager = manager;
         this.onCaptcha = manager.registerEvent(this, getMacroEventDefinition());
         this.onCaptcha.setVariableProviderClass(getClass());
     }
+
+    @Override
+    public void initInstance(String[] instanceVariables) {
+        vars.put("MAPDATA", instanceVariables[0]);
+    }
+
+    @Override
+    public void onTick(IMacroEventManager manager, Minecraft minecraft) {
+        if(captchaEventFired || !isHeldItemMap()) {
+            if(!isHeldItemMap())
+                captchaEventFired = false;
+            return;
+        }
+
+        int[] buffer = getDataOfHeldMapAsByteArray();
+        String mapData = new String(convertPngToBase64(buffer));
+        storeCaptchaInMapDirectory(mapData);
+        OnCaptcha.manager.sendEvent(this.onCaptcha, mapData);
+        captchaEventFired = true;
+    }
+
+    public OnCaptcha() {}
+    public OnCaptcha(IMacroEvent e) {}
 
     @Override
     public List<String> getHelp(IMacroEvent macroEvent) {
@@ -70,16 +90,6 @@ public class OnCaptcha extends BaseEventProvider implements IMacroEventDispatche
     @Override
     public Map<String, Object> getInstanceVarsMap() {
         return vars;
-    }
-
-    @Override
-    public void onTick(IMacroEventManager manager, Minecraft minecraft) {
-        if(!isHeldItemMap())
-            return;
-        int[] buffer = getDataOfHeldMapAsByteArray();
-        String mapData = new String(convertPngToBase64(buffer));
-        storeCaptchaInMapDirectory(mapData);
-        OnCaptcha.manager.sendEvent(this.onCaptcha, mapData);
     }
 
     @Override
