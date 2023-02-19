@@ -26,8 +26,9 @@ public class OnBetterChat extends BaseEventProvider implements ChatListener {
         help = Collections.unmodifiableList(helpList);
     }
 
+    @Nonnull
     @Override
-    public @Nonnull String getEventName() {
+    public String getEventName() {
         return "onBetterChat";
     }
 

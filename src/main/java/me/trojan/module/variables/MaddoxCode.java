@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Chat extends BaseVariableProvider implements ChatListener {
+public class MaddoxCode extends BaseVariableProvider implements ChatListener {
     private static final Pattern MADDOX_PATTERN = Pattern.compile("\"action\":\"run_command\",\"value\":\"(/cb [a-z0-9-]+)");
     private String maddoxCode = "No Maddox Code found.";
 
