@@ -1,7 +1,10 @@
 package me.trojan;
 
+import net.eq2online.macros.scripting.actions.lang.ScriptActionWait;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
 
 /* This class contains values that have to be cached, mostly for performance related reasons.
  * Getting a Field via Reflection once and then storing it is much less performance-intensive than retrieving the Field each time. */

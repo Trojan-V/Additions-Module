@@ -101,7 +101,7 @@ public class EditedVariableProviderShared extends VariableProviderArray implemen
      * Old code which automatically converted string values which are integers to an integer,
      * which destroyed the availability of values like "00", as "00" would've been formatted automatically to 0.
      *
-     * @Reference VariableProviderShared.java (line 93-113) to see the code used by default.
+     * @code VariableProviderShared.java (line 93-113) to see the code used by default.
      */
     public Object getVariable(String variableName) {
         if (!variableName.startsWith("@") || !Variable.isValidVariableName(variableName))

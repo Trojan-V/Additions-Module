@@ -6,9 +6,8 @@ import me.trojan.base.BaseScriptAction;
 import me.trojan.engine.EditedVariableProviderShared;
 import me.trojan.helpers.ReflectionHelper;
 import me.trojan.module.parsers.*;
-import me.trojan.socket.websocket.Config;
-import me.trojan.socket.websocket.WebSocket;
-import net.eq2online.console.Log;
+import me.trojan.websocket.Config;
+import me.trojan.websocket.WebSocket;
 import net.eq2online.macros.core.Macros;
 import net.eq2online.macros.scripting.ActionParser;
 import net.eq2online.macros.scripting.api.*;
@@ -40,7 +39,7 @@ public class ScriptActionInternalModuleInitialization extends BaseScriptAction {
         /* Register Action Parsers added by this module, located in me.trojan.module.parsers. */
         handleActionParserRegistration();
         replaceVariableProviderShared();
-        addDiscordGatewayListener();
+        //addDiscordGatewayListener();
         initializeModule();
     }
 
@@ -88,7 +87,7 @@ public class ScriptActionInternalModuleInitialization extends BaseScriptAction {
         reAddActionParsers();
         //DiscordCommandListener.INSTANCE.start();
         // Instantiate a new thread of the Main Websockets Thread which will listen to Discord Gateway API and get messages if any have been sent.
-        new BetterModuleLoader(Macros.getInstance().getMacrosDirectory()).loadModules(null);
+        new CustomModuleLoader(Macros.getInstance().getMacrosDirectory()).loadModules(null);
         //new WebSocketConnectionThread().start();
         //Log.info("ws connection thread started.");
     }

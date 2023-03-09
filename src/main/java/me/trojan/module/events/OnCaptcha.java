@@ -67,7 +67,7 @@ public class OnCaptcha extends BaseEventProvider implements IMacroEventDispatche
     @Override
     public void onTick(IMacroEventManager manager, Minecraft minecraft) {
         if(captchaEventFired || !isHeldItemMap()) {
-            if(!isHeldItemMap())
+            if(!isHeldItemMap() && captchaEventFired)
                 captchaEventFired = false;
             return;
         }

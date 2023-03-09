@@ -4,16 +4,31 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            name = 'sonatype'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
         }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+build {
+    doLast {
+        task copyJar(type: Copy) {
+            def MultiMCDir = 'D:/Spiele/MultiMC/instances/'
+            def instanceName = 'Cobblestone Development'
+            def defaultModulesPath = '.minecraft/liteconfig/common/macros/modules'
+            copy {
+                from jar
+                into MultiMCDir + instanceName + '/' + defaultModulesPath
+            }
+            println 'Copied jar from build directory into modules folder'
+        }
     }
 }
 
@@ -43,13 +58,15 @@ repositories {
 dependencies {
     deobfCompile "net.eq2online:macrosdev:$modVersion"
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.3'
 }
 
 afterEvaluate {
     runClient {
         List<String> argList = new ArrayList<>()
-        argList.add("-Xmx2G"); argList.add("-XX:MaxMetaspaceSize=512m"); argList.add("-DFORGE_FORCE_FRAME_RECALC=true")
-        argList.add("-Dmacros.modules=" + modules.split(",").collect{mod -> "$basePackage.$mod"}.join(','))
+        argList.add('-Xmx2G'); argList.add('-XX:MaxMetaspaceSize=512m'); argList.add('-DFORGE_FORCE_FRAME_RECALC=true')
+        argList.add('-Dmacros.modules=' + modules.split(',').collect{mod -> "$basePackage.$mod"}.join(','))
         jvmArgs argList
    }
 
@@ -61,27 +78,22 @@ afterEvaluate {
       $modVersion -> The version of MacroMod, for 1.12.1 this is usually 0.15.4
       $apiVersion -> The API version MacroMod uses, for 1.12.1 this is API 26 */
     jar {
-        baseName = "module_" + archivesBaseName
-        classifier = ""
+        baseName = 'module_' + archivesBaseName
+        classifier = ''
         //classifier = "$apiVersion-$modVersion-" + jar.classifier
-        extension = "jar"
+        extension = 'jar'
+
+        from {
+            configurations.runtimeClasspath.collect {
+                it.isDirectory() ? it : zipTree(it)
+        }
+            }
+        include('org/java_websocket/**')
+        include('me/trojan/**')
     }
 
     sourceJar {
         baseName = jar.baseName
-        classifier = jar.classifier + "-sources"
-    }
-
-    tasks.build.doLast {
-        task copyJar(type: Copy) {
-            def MultiMCDir = 'D:/Spiele/MultiMC/instances/'
-            def instanceName = 'Cobblestone Development'
-            def defaultModulesPath = '.minecraft/liteconfig/common/macros/modules'
-            copy {
-                from jar
-                into MultiMCDir + instanceName + '/' + defaultModulesPath
-            }
-            println('Copied jar from build directory into modules folder')
-       }
+        classifier = jar.classifier + '-sources'
     }
 }
